@@ -1,0 +1,35 @@
+body {
+  margin: 0px;
+}
+
+ul {
+  padding: 0px;
+  margin: 0px;
+  list-style: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.slide-wrapper {
+  overflow: hidden;
+}
+
+.slide-wrapper .slide {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-transform: translate3d(0px, 0px, 0px);
+          transform: translate3d(0px, 0px, 0px);
+}
+
+.slide-wrapper .slide li {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  width: 80vw;
+  max-width: 800px;
+  margin: 0 20px;
+}
+/*# sourceMappingURL=style.css.map */
