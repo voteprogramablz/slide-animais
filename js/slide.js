@@ -38,30 +38,30 @@ export class Slide {
     this.wrapper.addEventListener(movetype, this.onMove);
     this.transition(false);
   }
-
+  
   onMove(event) {
     const pointerPosition = (event.type === 'mousemove') 
-      ? event.clientX
-      : event.changedTouches[0].clientX;
-
+    ? event.clientX
+    : event.changedTouches[0].clientX;
+    
     const finalPosition = this.uptadePosition(pointerPosition)
     this.moveSlide(finalPosition);
   }
-
+  
   onEnd(event) {
     const movetype = (event.type === 'mouseup')
-      ? 'mousemove'
-      : 'touchmove'
+    ? 'mousemove'
+    : 'touchmove'
     this.wrapper.removeEventListener(movetype, this.onMove);
     this.dist.finalPosition = this.dist.movePosition;
     this.transition(true);
     this.changeSlideOnEnd();
   }
-
+  
   changeSlideOnEnd() {
-    if ((this.dist.movement > this.wrapper.offsetWidth / 2) && this.index.next !== undefined) {
+    if (this.dist.movement > 120 && this.index.next !== undefined) {
       this.activeNextSlide();
-    } else if ((this.dist.movement < -(this.wrapper.offsetWidth / 2)) && this.index.prev !== undefined) {
+    } else if (this.dist.movement < -120 && this.index.prev !== undefined) {
       this.activePrevSlide();
     } else {
       this.changeSlide(this.index.active);
@@ -69,12 +69,10 @@ export class Slide {
   }
 
   addSlideEvents() {
-    ['touchstart','mousedown'].forEach(event => {
-      this.wrapper.addEventListener(event, this.onStart);
-    });
-    ['touchend','mouseup'].forEach(event => {
-      this.wrapper.addEventListener(event, this.onEnd);
-    });
+    this.wrapper.addEventListener('mousedown', this.onStart);
+    this.wrapper.addEventListener('touchstart', this.onStart);
+    this.wrapper.addEventListener('mouseup', this.onEnd);
+    this.wrapper.addEventListener('touchend', this.onEnd);
   }
 
   bindEvents() {
@@ -85,24 +83,21 @@ export class Slide {
 
   // Calcula a posição do slide para colocar ele exatamente no centro.
   slidePosition(slide) {
-    const margin = (this.wrapper.offsetWidth - slide.offsetWidth) / 2 ;
+    const margin = (this.wrapper.offsetWidth - slide.offsetWidth) / 2;
     return -(slide.offsetLeft - margin)
   }
   
   // Slides config
   slidesConfig() {
     this.slideArray = [...this.slide.children].map((element) => {
-      const position =  this.slidePosition(element);
-      return {
-        position,
-        element
-      }
+      const position = this.slidePosition(element);
+      return { position, element };
     })
   }
 
   // Função que salva o index do slide em um objeto.
   slideIndexNav(index) {
-    const last = --this.slideArray.length;
+    const last = this.slideArray.length - 1;
     this.index = {
       prev: index ? index - 1 : undefined,
       active: index,
@@ -120,21 +115,17 @@ export class Slide {
 
   // Active the previous slide.
   activePrevSlide() {
-    if (this.index.prev !== undefined) {
-      this.changeSlide(this.index.prev);
-    } 
+    if (this.index.prev !== undefined) this.changeSlide(this.index.prev) 
   }
 
   // Active the next slide 
   activeNextSlide() {
-    if (this.index.next !== undefined) {
-      this.changeSlide(this.index.next);
-    } 
+    if (this.index.next !== undefined) this.changeSlide(this.index.next)
   }
 
   init() {
-    this.transition(true);
     this.bindEvents();
+    this.transition(true);
     this.addSlideEvents();
     this.slidesConfig();
     return this;
