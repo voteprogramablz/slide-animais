@@ -15,7 +15,7 @@ img {
 
 .slide-wrapper {
   overflow: hidden;
-  margin-top: 200px;
+  margin-top: 15px;
 }
 
 .slide-wrapper .slide {
@@ -24,11 +24,30 @@ img {
   display: flex;
 }
 
+.slide-wrapper .slide:hover {
+  will-change: transform;
+}
+
 .slide-wrapper .slide li {
   -ms-flex-negative: 0;
       flex-shrink: 0;
   width: 80vw;
   max-width: 800px;
   margin: 0 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  opacity: .8;
+  -webkit-transform: scale(0.8);
+          transform: scale(0.8);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slide-wrapper .slide li.active {
+  opacity: 1;
+  -webkit-transform: scale(1);
+          transform: scale(1);
 }
 /*# sourceMappingURL=style.css.map */
