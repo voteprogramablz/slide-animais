@@ -1,7 +1,10 @@
+import { debounce } from "./debounce.js";
+
 export class Slide {
   constructor(slide, wrapper) {
     this.slide = document.querySelector(slide);
     this.wrapper = document.querySelector(wrapper);
+    this.activeClass = 'active';
 
     this.dist = {
       finalPosition: 0,
@@ -75,12 +78,6 @@ export class Slide {
     this.wrapper.addEventListener('touchend', this.onEnd);
   }
 
-  bindEvents() {
-    this.onStart = this.onStart.bind(this);
-    this.onEnd = this.onEnd.bind(this);
-    this.onMove = this.onMove.bind(this);
-  }
-
   // Calcula a posição do slide para colocar ele exatamente no centro.
   slidePosition(slide) {
     const margin = (this.wrapper.offsetWidth - slide.offsetWidth) / 2;
@@ -111,6 +108,12 @@ export class Slide {
     this.moveSlide(activeSlide.position);
     this.slideIndexNav(index);
     this.dist.finalPosition = activeSlide.position;
+    this.changeActiveClass();
+  }
+
+  changeActiveClass() {
+    this.slideArray.forEach((item) => item.element.classList.remove(this.activeClass));
+    this.slideArray[this.index.active].element.classList.add(this.activeClass);
   }
 
   // Active the previous slide.
@@ -123,11 +126,31 @@ export class Slide {
     if (this.index.next !== undefined) this.changeSlide(this.index.next)
   }
 
+  onResize() {
+    setTimeout(() => {
+      this.slidesConfig();
+      this.changeSlide(this.index.active);
+    }, 600);
+  }
+
+  addResizeEvent() {
+    window.addEventListener('resize', this.onResize)
+  }
+
+  bindEvents() {
+    this.onStart = this.onStart.bind(this);
+    this.onEnd = this.onEnd.bind(this);
+    this.onMove = this.onMove.bind(this);
+
+    this.onResize = debounce(this.onResize.bind(this), 200);
+  }
+
   init() {
     this.bindEvents();
     this.transition(true);
     this.addSlideEvents();
     this.slidesConfig();
+    this.addResizeEvent();
     return this;
   }
 }
